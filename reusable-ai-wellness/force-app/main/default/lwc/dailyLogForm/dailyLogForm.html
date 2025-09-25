@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Daily Log" icon-name="standard-task">
+        <div class="slds-p-around_medium">
+            <lightning-input label="Date" value={date} onchange={handleChange} data-field="Date__c"></lightning-input>
+            <lightning-textarea label="Meals" value={meals} onchange={handleChange} data-field="Meals__c"></lightning-textarea>
+            <lightning-textarea label="Workout" value={workout} onchange={handleChange} data-field="Workout__c"></lightning-textarea>
+            <lightning-input type="number" label="Sleep Hours" value={sleep} onchange={handleChange} data-field="Sleep_Hours__c"></lightning-input>
+            <lightning-input type="number" label="HRV" value={hrv} onchange={handleChange} data-field="HRV__c"></lightning-input>
+            <lightning-input type="number" label="RHR" value={rhr} onchange={handleChange} data-field="RHR__c"></lightning-input>
+            <lightning-input type="number" label="Calories Burned" value={calories} onchange={handleChange} data-field="Calories_Burned__c"></lightning-input>
+            <lightning-button variant="brand" label="Save" onclick={handleSave}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

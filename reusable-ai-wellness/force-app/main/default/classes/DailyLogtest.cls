@@ -1,5 +1,5 @@
 @isTest
-public class DailyLogtest {
+public class DailyLogTest {
     @isTest
     static void insertDailyLog(){
         Daily_Log__c log = new Daily_Log__c(

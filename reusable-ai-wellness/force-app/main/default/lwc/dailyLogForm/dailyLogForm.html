@@ -8,6 +8,7 @@
             <lightning-input type="number" label="HRV" value={hrv} onchange={handleChange} data-field="HRV__c"></lightning-input>
             <lightning-input type="number" label="RHR" value={rhr} onchange={handleChange} data-field="RHR__c"></lightning-input>
             <lightning-input type="number" label="Calories Burned" value={calories} onchange={handleChange} data-field="Calories_Burned__c"></lightning-input>
+            <lightning-combobox label="Mood" data-field="Mood__c" onchange={handleChange} options={moodOptions}></lightning-combobox>
             <lightning-button variant="brand" label="Save" onclick={handleSave}></lightning-button>
         </div>
     </lightning-card>

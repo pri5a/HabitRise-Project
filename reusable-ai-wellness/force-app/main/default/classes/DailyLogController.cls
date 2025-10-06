@@ -86,4 +86,17 @@ public with sharing class DailyLogController {
         }
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<Daily_Log__c> getDailyLogs(){
+        //Field-level security check
+        if(!Schema.sObjectType.Daily_Log__c.isAccessible()){
+            throw new AuraHandledException('Access Denied');
+        }
+        return [
+            SELECT Id, Date__c, Meals__c, Workout__c, Sleep_Hours__c, Mood__c
+            FROM Daily_Log__c
+            ORDER BY Date__c DESC
+        ];
+    }
+
 }

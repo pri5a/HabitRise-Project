@@ -1,11 +1,15 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 //import { createRecord } from 'lightning/uiRecordApi';
 import saveDailyLog from '@salesforce/apex/DailyLogController.saveDailyLog';
+import getFeedback from '@salesforce/apex/WellnessCoachController.getFeedback';
 
 import DAILY_LOG_OBJECT from '@salesforce/schema/Daily_Log__c';
 export default class DailyLogForm extends LightningElement {
+    @api recordId;
+    @track lastRecordId;
     @track formData = {};
+    feedbackMessage;
 
     moodOptions = [
         {label: 'Good', value: 'Good'},
@@ -40,6 +44,8 @@ export default class DailyLogForm extends LightningElement {
         saveDailyLog({ jsonData: JSON.stringify(payload)})
         .then(res => {
             if(res && res.success) {
+                //store the record Id
+                this.lastRecordId = res.recordId;
                 this.showToast('Saved', 'Daily log saved successfully', 'success');
                 //clear inputs
                 this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-combobox').forEach(el => {
@@ -56,36 +62,26 @@ export default class DailyLogForm extends LightningElement {
             const message = (error && error.body && error.body.message) ? error.body.message : error.message;
             this.showToast('Error', message, 'error');
         });
-
-        // const fields = this.formData;
-        // const recordInput = {
-        //     apiName: DAILY_LOG_OBJECT.objectApiName,
-        //     fields
-        // };
-
-        // createRecord(recordInput)
-        //     .then(()=>{
-        //         this.dispatchEvent(
-        //             new ShowToastEvent({
-        //                 title:'Success',
-        //                 message:'Daily Log Saved',
-        //                 variant:'success'
-        //             })
-        //         );
-        //         this.formData = {};
-        //     })
-        //     .catch(error => {
-        //         this.dispatchEvent(
-        //             new ShowToastEvent({
-        //             title:'Error',
-        //             message:error.body.message,
-        //             variant:'error'
-        //         })
-        //     );
-        //     });
     }
 
     showToast(title, message, variant){
         this.dispatchEvent(new ShowToastEvent({ title, message, variant}));
+    }
+
+    handleGetFeedback() {
+        
+        //const recordId = '$recordId';
+        if(!this.lastRecordId){
+            this.showToast('Info','Please save your daily log first before requesting feedback', 'info');
+            return;
+        }
+        getFeedback({ recordId: this.lastRecordId})
+            .then( result => {
+                this.feedbackMessage = result.message;
+            })
+            .catch(error => {
+                console.error('Error fetching feedback', error);
+                this.feedbackMessage = 'Unable to fetch feedback';
+            });
     }
 }
